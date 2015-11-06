@@ -6,5 +6,7 @@ require "turn_compass/controller"
 require "turn_compass/version"
 
 module TurnCompass
-  # Your code goes here...
+  def self.run
+    Controller.new.run
+  end
 end

@@ -3,10 +3,6 @@ require 'turn_compass/browser'
 require 'turn_compass/player'
 
 module TurnCompass
-  def self.run
-    Controller.new.run
-  end
-
   class Controller
     attr_reader :player
 
