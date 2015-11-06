@@ -25,24 +25,6 @@ module TurnCompass
         JXA
       end
 
-      def self.execute_method(method, *args)
-        ExecJS.exec <<-JXA.strip_heredoc
-          var app = Application("Safari")
-          var ret = app.#{method}(#{args.join(",")})
-
-          // TODO: make this recursively
-          if (Array.isArray(ret)) {
-            return ret.map(function(x) { return x.properties() })
-          } else if (typeof ret == 'object') {
-            return ret.properties()
-          } else if (typeof ret == 'function') {
-            return ret.properties()
-          } else {
-            return ret
-          }
-        JXA
-      end
-
     end
   end
 end
