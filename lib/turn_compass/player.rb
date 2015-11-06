@@ -11,6 +11,7 @@ module TurnCompass
       @player = player_object
     end
 
+    # FIXME: prevent updating illegal position
     def_delegator :@player, :player_position,  :position
     def_delegator :@player, :player_position=, :position=
   end
