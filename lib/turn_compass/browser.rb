@@ -12,6 +12,11 @@ module TurnCompass
     end
 
     def update
+      # TODO: Tab
+
+      # TODO: Tab location
+
+      # Scroll position
       @previous_scroll_position = @current_scroll_position
       @current_scroll_position = get_scroll_position
 
