@@ -22,6 +22,7 @@ module TurnCompass
 
     def update
       browser.update
+      player.update
     end
 
     def handle

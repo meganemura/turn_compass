@@ -12,6 +12,9 @@ module TurnCompass
       @track = current_track
     end
 
+    def update
+    end
+
     # FIXME: prevent updating illegal position
     def_delegator :@player, :player_position,  :position
     def_delegator :@player, :player_position=, :position=
