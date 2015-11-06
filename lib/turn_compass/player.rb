@@ -16,9 +16,19 @@ module TurnCompass
     def update
     end
 
-    # FIXME: prevent updating illegal position
     def_delegator :@player, :player_position,  :position
-    def_delegator :@player, :player_position=, :position=
+    def position=(value)
+      available_position = [value, track.length].min
+      available_position = [0, available_position].max
+
+      begin
+        @player.player_position = available_position
+      rescue ExecJS::ProgramError => e
+        puts "ERROR: #{available_position} / #{track.length}"
+        puts e
+      end
+    end
+
     def_delegator :@player, :current_track
 
     class Track
