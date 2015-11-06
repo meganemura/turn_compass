@@ -28,11 +28,16 @@ module TurnCompass
     end
 
     def get_scroll_position
-      Application.exec(<<-JXA.strip_heredoc)
-        win = app.windows[0];
-        tab = win.activeTab();
-        return app.execute(tab, {javascript: "document.body.scrollTop"})
-      JXA
+      begin
+        Application.exec(<<-JXA.strip_heredoc)
+          win = app.windows[0];
+          tab = win.activeTab();
+          return app.execute(tab, {javascript: "document.body.scrollTop"})
+        JXA
+      rescue ExecJS::ProgramError => e
+        puts e
+        0
+      end
     end
 
     class Application
