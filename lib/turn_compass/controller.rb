@@ -1,3 +1,5 @@
+require 'logger'
+
 require 'tunees'
 require 'turn_compass/browser'
 require 'turn_compass/player'
@@ -6,8 +8,16 @@ module TurnCompass
   class Controller
     attr_reader :player
     attr_reader :browser
+    attr_reader :logger
 
     def initialize
+      @logger = Logger.new(STDOUT)
+      @logger.level = if ENV['DEBUG'] == '1' || ENV['DEBUG'].to_s.downcase == 'true'
+                        Logger::DEBUG
+                      else
+                        Logger::INFO
+                      end
+
       @player = Player.new
       @browser = Browser.new
     end
@@ -21,6 +31,7 @@ module TurnCompass
     end
 
     def update
+      logger.debug('*')
       browser.update
       player.update
     end
