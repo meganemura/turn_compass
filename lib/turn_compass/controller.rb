@@ -1,5 +1,6 @@
 require 'tunees'
 require 'turn_compass/browser'
+require 'turn_compass/player'
 
 module TurnCompass
   def self.run
@@ -7,7 +8,10 @@ module TurnCompass
   end
 
   class Controller
+    attr_reader :player
+
     def initialize
+      @player = Player.new
       update_position
     end
 
@@ -17,12 +21,11 @@ module TurnCompass
 
         case @scroll_position <=> previous_position
         when -1
-          position = Tunees::Application.player_position
-          Tunees::Application.player_position = position - 3
+          player.position -= 3
         when 0
+          # noop
         when 1
-          position = Tunees::Application.player_position
-          Tunees::Application.player_position = position + 3
+          player.position += 3
         end
 
         sleep 0.1
