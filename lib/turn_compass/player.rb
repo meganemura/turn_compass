@@ -30,6 +30,8 @@ module TurnCompass
     end
 
     def_delegator :@player, :current_track
+    def_delegator :@player, :back_track
+    def_delegator :@player, :next_track
 
     class Track
       attr_reader :track

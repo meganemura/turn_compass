@@ -26,6 +26,15 @@ module TurnCompass
     end
 
     def handle
+      case browser.moved_tab_index
+      when -1
+        player.back_track
+      when 0
+        # noop
+      when 1
+        player.next_track
+      end
+
       case browser.moved_scroll_position
       when -1
         player.position -= 3

@@ -4,6 +4,9 @@ require 'active_support/core_ext/string/strip'
 module TurnCompass
   class Browser
 
+    attr_accessor :current_tab_index
+    attr_accessor :previous_tab_index
+
     attr_accessor :current_scroll_position
     attr_accessor :previous_scroll_position
 
@@ -11,8 +14,12 @@ module TurnCompass
     def initialize
     end
 
+    # TODO: Integrate to one query to browser
+    #         to better performance.
     def update
       # TODO: Tab
+      @previous_tab_index = @current_tab_index
+      @current_tab_index = get_current_tab_index
 
       # TODO: Tab location
 
@@ -21,6 +28,22 @@ module TurnCompass
       @current_scroll_position = get_scroll_position
 
       nil
+    end
+
+    def moved_tab_index
+      current_tab_index <=> previous_tab_index
+    end
+
+    def get_current_tab_index
+      begin
+        Application.exec(<<-JXA.strip_heredoc)
+          win = app.windows[0];
+          return win.activeTabIndex();
+        JXA
+      rescue ExecJS::ProgramError => e
+        puts e
+        0
+      end
     end
 
     def moved_scroll_position
