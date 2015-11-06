@@ -5,18 +5,18 @@ require 'turn_compass/player'
 module TurnCompass
   class Controller
     attr_reader :player
+    attr_reader :browser
 
     def initialize
       @player = Player.new
       @browser = Browser.new
-      update_position
     end
 
     def run
       loop do
-        previous_position = update_position
+        browser.update
 
-        case @scroll_position <=> previous_position
+        case browser.moved_scroll_position
         when -1
           player.position -= 3
         when 0
@@ -27,13 +27,6 @@ module TurnCompass
 
         sleep 0.1
       end
-    end
-
-    def update_position
-      previous_position = @scroll_position
-      @scroll_position = @browser.scroll_position
-
-      previous_position
     end
   end
 end

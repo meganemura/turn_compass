@@ -4,11 +4,25 @@ require 'active_support/core_ext/string/strip'
 module TurnCompass
   class Browser
 
+    attr_accessor :current_scroll_position
+    attr_accessor :previous_scroll_position
+
     # Currently support only Google Chrome
     def initialize
     end
 
-    def scroll_position
+    def update
+      @previous_scroll_position = @current_scroll_position
+      @current_scroll_position = get_scroll_position
+
+      nil
+    end
+
+    def moved_scroll_position
+      current_scroll_position <=> previous_scroll_position
+    end
+
+    def get_scroll_position
       Application.exec(<<-JXA.strip_heredoc)
         win = app.windows[0];
         tab = win.activeTab();
