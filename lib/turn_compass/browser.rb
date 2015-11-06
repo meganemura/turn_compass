@@ -2,9 +2,21 @@ require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/string/strip'
 
 module TurnCompass
-  module Browser
-    class Application
+  class Browser
 
+    # Currently support only Google Chrome
+    def initialize
+    end
+
+    def scroll_position
+      Application.exec(<<-JXA.strip_heredoc)
+        win = app.windows[0];
+        tab = win.activeTab();
+        return app.execute(tab, {javascript: "document.body.scrollTop"})
+      JXA
+    end
+
+    class Application
       def self.exec(script)
         ExecJS.exec <<-JXA.strip_heredoc
           var app = Application("Chrome")
@@ -24,7 +36,6 @@ module TurnCompass
           }
         JXA
       end
-
     end
   end
 end

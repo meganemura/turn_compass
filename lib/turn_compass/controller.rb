@@ -8,6 +8,7 @@ module TurnCompass
 
     def initialize
       @player = Player.new
+      @browser = Browser.new
       update_position
     end
 
@@ -30,7 +31,7 @@ module TurnCompass
 
     def update_position
       previous_position = @scroll_position
-      @scroll_position = Browser::Application.exec(%q<win = app.windows[0]; tab = win.activeTab(); return app.execute(tab, {javascript: "document.body.scrollTop"})>)
+      @scroll_position = @browser.scroll_position
 
       previous_position
     end
