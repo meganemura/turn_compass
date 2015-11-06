@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'active_support/core_ext/hash/keys'
 
 module TurnCompass
   class Player
@@ -9,7 +10,7 @@ module TurnCompass
 
     def initialize(player_object = Tunees::Application)
       @player = player_object
-      @track = current_track
+      @track = Track.new(current_track)
     end
 
     def update
@@ -19,5 +20,16 @@ module TurnCompass
     def_delegator :@player, :player_position,  :position
     def_delegator :@player, :player_position=, :position=
     def_delegator :@player, :current_track
+
+    class Track
+      attr_reader :track
+      def initialize(track = {})
+        @track = track.symbolize_keys
+      end
+
+      def length
+        @track[:duration]
+      end
+    end
   end
 end
