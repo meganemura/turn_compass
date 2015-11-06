@@ -14,18 +14,24 @@ module TurnCompass
 
     def run
       loop do
-        browser.update
-
-        case browser.moved_scroll_position
-        when -1
-          player.position -= 3
-        when 0
-          # noop
-        when 1
-          player.position += 3
-        end
-
+        update
+        handle
         sleep 0.1
+      end
+    end
+
+    def update
+      browser.update
+    end
+
+    def handle
+      case browser.moved_scroll_position
+      when -1
+        player.position -= 3
+      when 0
+        # noop
+      when 1
+        player.position += 3
       end
     end
   end
