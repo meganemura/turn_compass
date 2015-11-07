@@ -20,6 +20,9 @@ module TurnCompass
 
       @player = Player.new
       @browser = Browser.new
+
+      # Turn Tables
+      @tables = {}
     end
 
     def run
@@ -37,15 +40,23 @@ module TurnCompass
     end
 
     def handle
-      case browser.moved_tab_index
-      when -1
-        player.back_track
-      when 0
-        # noop
-      when 1
-        player.next_track
+      if browser.is_tab_moved?
+        switch_sound_output
+      else
+        handle_scratch
+        update_tables
       end
+    end
 
+    def switch_sound_output
+      logger.info browser.moved_tab_index
+      index = browser.current_tab_index
+      if table = @tables[index]
+        player.play(table[:persistent_id], table[:position])
+      end
+    end
+
+    def handle_scratch
       case browser.moved_scroll_position
       when -1
         player.position -= 3
@@ -55,5 +66,21 @@ module TurnCompass
         player.position += 3
       end
     end
+
+    def update_tables
+      index = browser.current_tab_index
+
+      return unless player.track
+
+      @tables[index] = {
+        :persistent_id => player.track.track[:persistentID],
+        :position      => player.position,
+      }
+
+      logger.debug(@tables)
+
+      nil
+    end
+
   end
 end

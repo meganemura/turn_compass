@@ -5,15 +5,41 @@ module TurnCompass
   class Player
     extend Forwardable
 
+    attr_reader   :logger
     attr_reader   :instance
     attr_accessor :track, :position
 
     def initialize(player_object = Tunees::Application)
       @player = player_object
-      @track = Track.new(current_track)
+      setup_track_table
+    end
+
+    # In JXA, `whose` method does not work correctly.
+    # We could not use tracks.whose({ persistentID: 'PERSISTENT-ID'})
+    # for track specifier.
+    # Alternatively, correct persistentID to ID mapping first,
+    # and use tracks.byID(id) in any cases.
+    # This should be changed if `whose` is fixed.
+    def setup_track_table
+      pid_and_id = Tunees::Application._execute(<<-JXA.strip_heredoc)
+        var ret = [app.tracks.persistentID(), app.tracks.id()]
+        return ret
+      JXA
+      @track_table = Hash[pid_and_id.transpose]
     end
 
     def update
+      @track = begin
+                 Track.new(current_track)
+               rescue ExecJS::ProgramError
+                 nil
+               end
+    end
+
+    def play(track_persistent_id, position = 0)
+      id = @track_table[track_persistent_id]
+      Tunees::Application.play(id)
+      self.position = position
     end
 
     def_delegator :@player, :player_position,  :position

@@ -30,6 +30,10 @@ module TurnCompass
       nil
     end
 
+    def is_tab_moved?
+      moved_tab_index == -1 || moved_tab_index == 1
+    end
+
     def moved_tab_index
       current_tab_index <=> previous_tab_index
     end
